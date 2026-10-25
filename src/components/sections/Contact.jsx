@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { contact } from "../../data/content"
+import { contact, profile } from "../../data/content"
 import { SectionHeading } from "../ui/SectionHeading"
 import { Reveal } from "../ui/Reveal"
 
@@ -28,14 +28,27 @@ function SocialIcon({ icon }) {
   )
 }
 
+const FORMSPREE_URL = "https://formspree.io/f/mrppewnj"
+
 export function Contact() {
   const [sent, setSent] = useState(false)
+  const [status, setStatus] = useState("idle") // idle | sending | error
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
-    // Front-end only. TODO: wire to a real form service (e.g. Formspree,
-    // Resend, or your own API) by POSTing the form data here.
-    setSent(true)
+    setStatus("sending")
+    try {
+      const res = await fetch(FORMSPREE_URL, {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: new FormData(e.currentTarget),
+      })
+      if (!res.ok) throw new Error("Formspree responded with " + res.status)
+      setSent(true)
+      setStatus("idle")
+    } catch {
+      setStatus("error")
+    }
   }
 
   return (
@@ -45,6 +58,18 @@ export function Contact() {
       <Reveal as="p" className="text-lg text-[color:var(--color-parchment-2)] max-w-xl mx-auto">
         {contact.invitation}
       </Reveal>
+
+      {profile.resumeUrl && profile.resumeUrl !== "#" && (
+        <Reveal delay={0.05} className="mt-8">
+          <a
+            href={profile.resumeUrl}
+            download="Ronald-Paguntalan-Resume.pdf"
+            className="inline-flex items-center gap-2 rounded-full border border-[color:var(--color-gold)] px-7 py-3 font-heading text-xs uppercase tracking-[0.2em] text-[color:var(--color-parchment)] transition-colors hover:bg-[color:var(--color-gold)] hover:text-[color:var(--color-midnight)]"
+          >
+            Download Resume ↓
+          </a>
+        </Reveal>
+      )}
 
       <Reveal delay={0.1} className="mt-10">
         {sent ? (
@@ -66,6 +91,16 @@ export function Contact() {
               />
             </div>
             <div>
+              <label htmlFor="c-email" className="font-heading uppercase tracking-[0.18em] text-[11px] text-[color:var(--color-gold)]">Your Email</label>
+              <input
+                id="c-email"
+                name="email"
+                type="email"
+                required
+                className="mt-2 w-full rounded-md bg-[color:var(--color-midnight)]/60 border border-[color:var(--color-gold)]/25 px-4 py-3 text-[color:var(--color-parchment)] outline-none focus:border-[color:var(--color-gold)] transition-colors"
+              />
+            </div>
+            <div>
               <label htmlFor="c-msg" className="font-heading uppercase tracking-[0.18em] text-[11px] text-[color:var(--color-gold)]">Your Message</label>
               <textarea
                 id="c-msg"
@@ -75,11 +110,17 @@ export function Contact() {
                 className="mt-2 w-full rounded-md bg-[color:var(--color-midnight)]/60 border border-[color:var(--color-gold)]/25 px-4 py-3 text-[color:var(--color-parchment)] outline-none focus:border-[color:var(--color-gold)] transition-colors resize-none"
               />
             </div>
+            {status === "error" && (
+              <p role="alert" className="text-center text-sm text-[color:var(--color-gold-bright)]">
+                The owl didn't make it this time. Please try again.
+              </p>
+            )}
             <button
               type="submit"
-              className="group relative w-full overflow-hidden rounded-full border border-[color:var(--color-gold)] px-7 py-3 font-heading text-xs uppercase tracking-[0.2em] text-[color:var(--color-parchment)] transition-colors hover:text-[color:var(--color-midnight)]"
+              disabled={status === "sending"}
+              className="group relative w-full overflow-hidden rounded-full border border-[color:var(--color-gold)] px-7 py-3 font-heading text-xs uppercase tracking-[0.2em] text-[color:var(--color-parchment)] transition-colors hover:text-[color:var(--color-midnight)] disabled:opacity-60 disabled:cursor-wait"
             >
-              <span className="relative z-10">Dispatch Owl 🦉</span>
+              <span className="relative z-10">{status === "sending" ? "Sending…" : "Dispatch Owl 🦉"}</span>
               <span className="absolute inset-0 bg-[color:var(--color-gold)] translate-y-full transition-transform duration-300 group-hover:translate-y-0" />
             </button>
           </form>

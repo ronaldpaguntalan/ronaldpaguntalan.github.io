@@ -59,15 +59,15 @@ function EduDetails({ entry }) {
       <p className="font-accent italic text-[color:var(--color-gold-bright)] mt-1">
         {entry.school}
       </p>
-      <div className="flex flex-wrap gap-2.5 mt-4">
-        {entry.honors.map((h) => (
-          <span
-            key={h}
-            className="font-heading uppercase tracking-[0.16em] text-[10px] text-[color:var(--color-gold)] border border-[color:var(--color-gold)]/40 rounded-full px-3.5 py-1.5"
-          >
-            {h}
-          </span>
-        ))}
+      <div className="mt-4 space-y-2 text-[color:var(--color-parchment-2)]">
+        <p>
+          <span className="font-heading uppercase tracking-[0.16em] text-[10px] text-[color:var(--color-gold)] mr-2">Awards</span>
+          {entry.honors.awards.join(" · ")}
+        </p>
+        <p>
+          <span className="font-heading uppercase tracking-[0.16em] text-[10px] text-[color:var(--color-gold)] mr-2">Leadership</span>
+          {entry.honors.leadership.join(" · ")}
+        </p>
       </div>
     </div>
   )

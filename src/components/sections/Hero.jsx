@@ -2,7 +2,16 @@ import { motion } from "framer-motion"
 import { profile } from "../../data/content"
 import { FloatingCandles } from "../atmosphere/FloatingCandles"
 import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion"
-import heroWizard from "../../assets/images/hero-wizard.png"
+import { Typewriter } from "../ui/Typewriter"
+
+const ROLES = [
+  "Wizard...",
+  "Cloud Software Engineer",
+  "Full Stack Developer",
+  "Cloud Solutions Architect",
+  "A Freelancer",
+]
+import heroWizard from "../../assets/images/web/hero-wizard.webp"
 
 export function Hero() {
   const reduced = usePrefersReducedMotion()
@@ -30,26 +39,22 @@ export function Hero() {
           animate="show"
           className="order-2 text-center lg:order-1 lg:text-left"
         >
-          <motion.p
-            variants={item}
-            className="font-heading uppercase tracking-[0.4em] text-xs sm:text-sm text-[color:var(--color-gold)]"
-          >
-            ✦ Welcome to the Great Hall ✦
-          </motion.p>
-
           <motion.h1
             variants={item}
-            className="font-display text-5xl sm:text-6xl md:text-7xl text-[color:var(--color-parchment)] mt-6 leading-[1.05]"
+            className="font-display text-5xl sm:text-6xl md:text-7xl text-[color:var(--color-parchment)] leading-[1.05]"
             style={{ textShadow: "0 0 40px rgba(201,162,75,0.25)" }}
           >
-            {profile.name}
+            <span className="block text-[0.80em]">Welcome to my Great Hall</span>
+            <span className="block mt-2">
+              I’m <span className="text-[color:var(--color-gold)]">Ronny</span>.
+            </span>
           </motion.h1>
 
           <motion.p
             variants={item}
             className="font-heading uppercase tracking-[0.3em] text-sm md:text-base text-[color:var(--color-gold-bright)] mt-5"
           >
-            {profile.role}
+            {reduced ? ROLES[1] : <Typewriter words={ROLES} />}
           </motion.p>
 
           <motion.p

@@ -8,6 +8,7 @@ import { Skills } from "./components/sections/Skills"
 import { Projects } from "./components/sections/Projects"
 import { Education } from "./components/sections/Education"
 import { Experience } from "./components/sections/Experience"
+import { Certificates } from "./components/sections/Certificates"
 import { Contact } from "./components/sections/Contact"
 
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
         <Projects />
         <Education />
         <Experience />
+        <Certificates />
         <Contact />
       </main>
       <Footer />

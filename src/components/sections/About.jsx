@@ -4,6 +4,19 @@ import { Reveal } from "../ui/Reveal"
 import workingPhoto from "../../assets/images/web/present-profile-working.webp"
 import hpCreative from "../../assets/images/web/hp-creative.webp"
 
+// Wraps *text* in a gold highlight; everything else renders as-is.
+function Highlighted({ text }) {
+  return text.split(/(\*[^*]+\*)/).map((part, i) =>
+    part.startsWith("*") && part.endsWith("*") ? (
+      <span key={i} className="font-semibold text-[color:var(--color-gold-bright)]">
+        {part.slice(1, -1)}
+      </span>
+    ) : (
+      <span key={i}>{part}</span>
+    )
+  )
+}
+
 export function About() {
   return (
     <section id="wizard" className="relative z-10 max-w-6xl mx-auto px-6 py-28">
@@ -23,14 +36,14 @@ export function About() {
               <div className="flip-inner">
                 <div className="flip-face">
                   <img
-                    src={hpCreative}
+                    src={workingPhoto}
                     alt=""
                     className="w-full h-full object-cover"
                   />
                 </div>
                 <div className="flip-face flip-back" aria-hidden="true">
                   <img
-                    src={workingPhoto}
+                    src={hpCreative}
                     alt=""
                     className="w-full h-full object-cover"
                   />
@@ -47,7 +60,7 @@ export function About() {
         <div>
           {about.paragraphs.map((p, i) => (
             <Reveal key={i} delay={i * 0.08} as="p" className="text-[color:var(--color-parchment-2)] mb-5 text-lg leading-relaxed">
-              {p}
+              <Highlighted text={p} />
             </Reveal>
           ))}
 

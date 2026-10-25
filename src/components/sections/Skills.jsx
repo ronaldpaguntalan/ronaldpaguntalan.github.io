@@ -1,6 +1,10 @@
 import { skillGroups } from "../../data/content"
 import { SectionHeading } from "../ui/SectionHeading"
 import { Reveal } from "../ui/Reveal"
+import { techIcons } from "../ui/techIcons"
+
+// One flat collection of every skill and tool, de-duplicated, in source order.
+const allSkills = [...new Set(skillGroups.flatMap((group) => group.skills))]
 
 export function Skills() {
   return (
@@ -8,30 +12,24 @@ export function Skills() {
       <div className="max-w-6xl mx-auto px-6">
         <SectionHeading eyebrow="The Spellbook" title="Skills & Tools" />
 
-        <div className="grid sm:grid-cols-2 gap-6">
-          {skillGroups.map((group, i) => (
-            <Reveal key={group.school} delay={i * 0.08}>
-              <div className="h-full rounded-xl border border-[color:var(--color-gold)]/25 bg-[color:var(--color-ink)]/40 parchment-grain p-7 transition-colors hover:border-[color:var(--color-gold)]/60">
-                <div className="flex items-center gap-3 mb-5">
-                  <span className="text-2xl text-[color:var(--color-gold)]">{group.glyph}</span>
-                  <h3 className="font-heading uppercase tracking-[0.2em] text-sm text-[color:var(--color-parchment)]">
-                    {group.school}
-                  </h3>
-                </div>
-                <div className="flex flex-wrap gap-2.5">
-                  {group.skills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="font-mono text-xs text-[color:var(--color-parchment-2)] bg-[color:var(--color-midnight)]/60 border border-[color:var(--color-gold)]/15 rounded-md px-3 py-1.5 transition-colors hover:border-[color:var(--color-gold)]/50 hover:text-[color:var(--color-gold-bright)]"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+        <Reveal>
+          <div className="rounded-xl border border-[color:var(--color-gold)]/25 bg-[color:var(--color-ink)]/40 parchment-grain p-8 md:p-10">
+            <div className="flex flex-wrap justify-center gap-3.5">
+              {allSkills.map((skill) => {
+                const Icon = techIcons[skill]
+                return (
+                  <span
+                    key={skill}
+                    className="skill-tile inline-flex items-center gap-2.5 font-mono text-sm text-[color:var(--color-parchment-2)] bg-[color:var(--color-midnight)]/60 border border-[color:var(--color-gold)]/20 rounded-lg px-4 py-2.5 transition-colors hover:border-[color:var(--color-gold)]/60 hover:text-[color:var(--color-gold-bright)] cursor-default"
+                  >
+                    {Icon && <Icon aria-hidden="true" className="text-base text-[color:var(--color-gold)]" />}
+                    {skill}
+                  </span>
+                )
+              })}
+            </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   )
